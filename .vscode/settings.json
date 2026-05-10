@@ -1,0 +1,16 @@
+{
+  // Formatter
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+
+  // Code Actions
+  "editor.codeActionsOnSave": {
+    "source.format.oxc": "always",
+    "source.fixAll.oxc": "always",
+    "source.addMissingImports": "always",
+    "source.removeUnusedImports": "always"
+  },
+
+  // Import Preferences
+  "js/ts.updateImportsOnFileMove.enabled": "always"
+}
