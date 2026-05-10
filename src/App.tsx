@@ -1,12 +1,15 @@
-import { Button } from './components/ui/button'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+import { HomePage } from './pages/Home'
+
+const queryClient = new QueryClient()
 
 export function App() {
   return (
-    <div className="grid min-h-dvh place-items-center">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-4xl">Turno Fácil</h1>
-        <Button onClick={() => console.log('Turno solicitado')}>Sacar turno</Button>
+    <QueryClientProvider client={queryClient}>
+      <div className="grid min-h-dvh place-items-center">
+        <HomePage />
       </div>
-    </div>
+    </QueryClientProvider>
   )
 }
