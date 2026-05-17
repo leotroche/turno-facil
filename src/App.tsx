@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router'
 
 import { AppRoutes } from './routes/AppRoutes'
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 
 export function App() {
   return (

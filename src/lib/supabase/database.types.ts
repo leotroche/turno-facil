@@ -8,7 +8,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      turnos: {
+        Row: {
+          actualizado_en: string | null
+          creado_en: string | null
+          estado: string | null
+          fecha: string
+          hora: string
+          id: string
+          nombre_cliente: string
+          servicio: string
+        }
+        Insert: {
+          actualizado_en?: string | null
+          creado_en?: string | null
+          estado?: string | null
+          fecha: string
+          hora: string
+          id?: string
+          nombre_cliente: string
+          servicio: string
+        }
+        Update: {
+          actualizado_en?: string | null
+          creado_en?: string | null
+          estado?: string | null
+          fecha?: string
+          hora?: string
+          id?: string
+          nombre_cliente?: string
+          servicio?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
