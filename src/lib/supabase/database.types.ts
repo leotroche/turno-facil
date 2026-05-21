@@ -8,36 +8,80 @@ export type Database = {
   }
   public: {
     Tables: {
-      turnos: {
+      reservas: {
         Row: {
-          actualizado_en: string | null
-          creado_en: string | null
-          estado: string | null
-          fecha: string
-          hora: string
+          alumno: string
           id: string
-          nombre_cliente: string
-          servicio: string
+          legajo: string
+          reservado_en: string
+          turno_id: string
         }
         Insert: {
-          actualizado_en?: string | null
-          creado_en?: string | null
-          estado?: string | null
-          fecha: string
-          hora: string
+          alumno: string
           id?: string
-          nombre_cliente: string
-          servicio: string
+          legajo: string
+          reservado_en?: string
+          turno_id: string
         }
         Update: {
-          actualizado_en?: string | null
-          creado_en?: string | null
-          estado?: string | null
-          fecha?: string
-          hora?: string
+          alumno?: string
           id?: string
-          nombre_cliente?: string
-          servicio?: string
+          legajo?: string
+          reservado_en?: string
+          turno_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'reservas_turno_id_fkey'
+            columns: ['turno_id']
+            isOneToOne: false
+            referencedRelation: 'turnos'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      turnos: {
+        Row: {
+          creado_en: string
+          cupo_maximo: number
+          descripcion: string | null
+          docente: string
+          estado: string
+          fecha: string
+          hora_fin: string
+          hora_inicio: string
+          id: string
+          materia: string
+          tipo: string
+          ubicacion: string
+        }
+        Insert: {
+          creado_en?: string
+          cupo_maximo: number
+          descripcion?: string | null
+          docente: string
+          estado?: string
+          fecha: string
+          hora_fin: string
+          hora_inicio: string
+          id?: string
+          materia: string
+          tipo: string
+          ubicacion: string
+        }
+        Update: {
+          creado_en?: string
+          cupo_maximo?: number
+          descripcion?: string | null
+          docente?: string
+          estado?: string
+          fecha?: string
+          hora_fin?: string
+          hora_inicio?: string
+          id?: string
+          materia?: string
+          tipo?: string
+          ubicacion?: string
         }
         Relationships: []
       }
