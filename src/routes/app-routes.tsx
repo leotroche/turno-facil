@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router'
 
-import { HomePage } from '@/pages/Home'
+import { HomePage } from '@/pages/home'
 import { SignupPage } from '@/pages/signup'
 import Turnos from '@/pages/turnos'
 
