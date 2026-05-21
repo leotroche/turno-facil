@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import { register } from '@/services/auth.services'
+import { register } from '@/services/auth.service'
 
 export function SignupForm({ className, ...props }: React.ComponentProps<'div'>) {
   const [email, setEmail] = useState('')
