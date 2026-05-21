@@ -1,18 +1,35 @@
 import { useQuery } from '@tanstack/react-query'
 
 import type { Tables } from '@/lib/supabase/database.types'
-import { obtenerTurnoPorId, obtenerTurnos } from '@/services/turno.services'
+import { obtenerTurnoPorId, obtenerTurnos } from '@/services/turno.service'
+
+// --------------------------------------------------------------------------------
 
 export function useTurnos() {
-  return useQuery<Tables<'turnos'>[]>({
+  const { data, isPending, error } = useQuery<Tables<'turnos'>[]>({
     queryKey: ['turnos'],
     queryFn: obtenerTurnos,
   })
+
+  return {
+    turnos: data ?? [],
+    isPending,
+    error,
+  }
 }
 
-export function useTurnoById(id: string) {
-  return useQuery<Tables<'turnos'> | null>({
+// --------------------------------------------------------------------------------
+
+export function useTurno(id: string) {
+  const { data, isPending, error } = useQuery<Tables<'turnos'>>({
     queryKey: ['turnos', id],
     queryFn: () => obtenerTurnoPorId(id),
+    enabled: !!id,
   })
+
+  return {
+    turno: data,
+    isPending,
+    error,
+  }
 }

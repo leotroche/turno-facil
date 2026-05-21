@@ -7,6 +7,7 @@ interface SignInData {
 
 export async function register({ email, password }: SignInData) {
   const { data, error } = await supabase.auth.signUp({ email, password })
+
   if (error) throw error
   return data
 }

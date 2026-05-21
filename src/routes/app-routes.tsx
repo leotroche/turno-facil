@@ -6,7 +6,7 @@ import Turnos from '@/pages/turnos'
 
 export function AppRoutes() {
   return (
-    <div className="grid min-h-dvh place-items-center">
+    <div className="container mx-auto grid min-h-dvh place-items-center">
       <Routes>
         <Route index Component={HomePage} />
         <Route path="/signup" Component={SignupPage} />
