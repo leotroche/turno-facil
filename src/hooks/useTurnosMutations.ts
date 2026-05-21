@@ -9,7 +9,7 @@ export function useTurnosMutations() {
   // ------------------------------------------------------------
 
   const crear = useMutation({
-    mutationFn: (nuevoTurno: Tables<'turnos'>) => crearTurno(nuevoTurno),
+    mutationFn: (nuevoTurno: Omit<Tables<'turnos'>, 'id' | 'creado_en'>) => crearTurno(nuevoTurno),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['turnos'] })
