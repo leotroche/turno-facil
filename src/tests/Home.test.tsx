@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { expect, test, vi } from 'vitest'
 
-import { HomePage } from '@/pages/home'
+import { HomePage } from '@/pages/Home'
 
 test('debe mostrar el título y disparar la acción al hacer clic en el botón', () => {
   // 1. Espiamos la consola para ver si el mensaje se imprime
