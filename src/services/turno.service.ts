@@ -1,17 +1,21 @@
 import { supabase } from '@/lib/supabase/client'
 import type { Tables } from '@/lib/supabase/database.types'
+import type { TurnoConCantidadReservas } from '@/types/types'
 
 // ------------------------------------------------------------
 
-export async function obtenerTurnos() {
+export async function obtenerTurnos(): Promise<TurnoConCantidadReservas[]> {
   const { data, error } = await supabase
     .from('turnos')
-    .select('*')
+    .select('*, reservas(id)')
     .order('fecha', { ascending: true })
-    .order('hora_inicio', { ascending: true })
 
   if (error) throw error
-  return data
+
+  return data.map((turno) => ({
+    ...turno,
+    cantidad_reservas: turno.reservas.length,
+  }))
 }
 
 // ------------------------------------------------------------
