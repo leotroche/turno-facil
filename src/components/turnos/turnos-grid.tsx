@@ -1,5 +1,6 @@
-import { TurnoCard } from '@/components/turnos/turno-card'
 import type { TurnoConCantidadReservas } from '@/types/types'
+
+import { TurnoCard } from './turno-card'
 
 export function TurnosGrid({ turnos }: { turnos: TurnoConCantidadReservas[] }) {
   return (

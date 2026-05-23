@@ -4,6 +4,7 @@ import type { TurnoConCantidadReservas } from '@/types/types'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card'
+import { Separator } from '../ui/separator'
 
 export function TurnoCard({ turno }: { turno: TurnoConCantidadReservas }) {
   const isFull = turno.estado === 'lleno'
@@ -12,60 +13,53 @@ export function TurnoCard({ turno }: { turno: TurnoConCantidadReservas }) {
   const isDisabled = isFull || isClosed
 
   return (
-    <Card>
-      <CardHeader className="space-y-3">
+    <Card className="space-y-2">
+      <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <CardDescription className="text-xs tracking-wide uppercase">
             {turno.tipo}
           </CardDescription>
 
-          <Badge
-            className="capitalize"
-            variant={isFull ? 'destructive' : isClosed ? 'secondary' : 'success'}
-          >
+          <Badge variant={isFull ? 'destructive' : isClosed ? 'secondary' : 'success'}>
             {turno.estado}
           </Badge>
         </div>
 
-        <CardTitle className="text-lg leading-tight font-semibold">{turno.materia}</CardTitle>
+        <div className="space-y-1">
+          <CardTitle className="font-medium">{turno.materia}</CardTitle>
+          <CardDescription className="leading-relaxed">{turno.descripcion}</CardDescription>
+        </div>
       </CardHeader>
 
-      {/* -------------------------------------------------------------------------------- */}
+      <Separator />
 
-      <CardContent className="flex-1 space-y-4">
-        {/* DESCRIPCIÓN */}
+      <CardContent className="grid grid-cols-2 gap-x-12 gap-y-4">
+        <div className="space-y-1">
+          <p className="text-muted-foreground">Fecha</p>
+          <p className="font-medium">{formatFecha(turno.fecha)}</p>
+        </div>
 
-        <p className="text-muted-foreground leading-relaxed">{turno.descripcion}</p>
-
-        {/* FECHA Y HORARIO */}
-
-        <div className="border-border/60 space-y-1 border-y py-4">
-          <p className="font-medium capitalize">{formatFecha(turno.fecha)}</p>
-          <p className="text-muted-foreground text-xs">
-            {formatHora(turno.hora_inicio)} a {formatHora(turno.hora_fin)} hs
+        <div className="space-y-1">
+          <p className="text-muted-foreground">Horario</p>
+          <p className="font-medium">
+            {formatHora(turno.hora_inicio)} - {formatHora(turno.hora_fin)} hs
           </p>
         </div>
 
-        {/* DOCENTE Y UBICACIÓN */}
+        <div className="space-y-1">
+          <p className="text-muted-foreground">Docente</p>
+          <p className="font-medium">{turno.docente}</p>
+        </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <p className="text-muted-foreground text-xs">Docente</p>
-            <p className="truncate font-medium">{turno.docente}</p>
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-muted-foreground text-xs">Ubicación</p>
-            <p className="truncate font-medium">{turno.ubicacion}</p>
-          </div>
+        <div className="space-y-1">
+          <p className="text-muted-foreground">Ubicación</p>
+          <p className="font-medium">{turno.ubicacion}</p>
         </div>
       </CardContent>
 
-      {/* -------------------------------------------------------------------------------- */}
-
       <CardFooter className="flex items-center justify-between gap-4">
         <div className="space-y-1">
-          <p className="text-muted-foreground text-xs">Cupos</p>
+          <p className="text-muted-foreground">Cupos</p>
           <p className="font-medium">
             {turno.cupo_maximo - turno.cantidad_reservas} de {turno.cupo_maximo} disponibles
           </p>
