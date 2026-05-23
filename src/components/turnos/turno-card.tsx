@@ -14,7 +14,7 @@ export function TurnoCard({ turno }: { turno: TurnoConCantidadReservas }) {
 
   return (
     <Card className="space-y-2">
-      <CardHeader className="space-y-4">
+      <CardHeader className="flex-1 space-y-4">
         <div className="flex items-center justify-between">
           <CardDescription className="text-xs tracking-wide uppercase">
             {turno.tipo}
