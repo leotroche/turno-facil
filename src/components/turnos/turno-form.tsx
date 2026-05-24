@@ -37,7 +37,7 @@ export function TurnoForm({ initialValues, onSubmit }: TurnoFormProps) {
   })
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field>
           <FieldLabel>Materia</FieldLabel>
@@ -102,9 +102,9 @@ export function TurnoForm({ initialValues, onSubmit }: TurnoFormProps) {
         </Field>
       </FieldGroup>
 
-      <Button type="submit" className="w-full">
-        {initialValues ? 'Actualizar turno' : 'Crear turno'}
-      </Button>
+      <div className="flex justify-end border-t pt-4">
+        <Button type="submit">{initialValues ? 'Modificar turno' : 'Crear turno'}</Button>
+      </div>
     </form>
   )
 }
