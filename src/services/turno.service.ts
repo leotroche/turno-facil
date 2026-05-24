@@ -1,17 +1,22 @@
 import { supabase } from '@/lib/supabase/client'
 import type { Tables } from '@/lib/supabase/database.types'
+import type { TurnoFormValues } from '@/schemas/turno-form-schema'
+import type { TurnoConCantidadReservas } from '@/types/types'
 
 // ------------------------------------------------------------
 
-export async function obtenerTurnos() {
+export async function obtenerTurnos(): Promise<TurnoConCantidadReservas[]> {
   const { data, error } = await supabase
     .from('turnos')
-    .select('*')
+    .select('*, reservas(id)')
     .order('fecha', { ascending: true })
-    .order('hora_inicio', { ascending: true })
 
   if (error) throw error
-  return data
+
+  return data.map((turno) => ({
+    ...turno,
+    cantidad_reservas: turno.reservas.length,
+  }))
 }
 
 // ------------------------------------------------------------
@@ -25,7 +30,7 @@ export async function obtenerTurnoPorId(id: string) {
 
 // ------------------------------------------------------------
 
-export async function crearTurno(nuevoTurno: Omit<Tables<'turnos'>, 'id' | 'creado_en'>) {
+export async function crearTurno(nuevoTurno: TurnoFormValues) {
   const { data, error } = await supabase.from('turnos').insert([nuevoTurno]).select().single()
 
   if (error) throw error
