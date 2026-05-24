@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase/client'
 import type { Tables } from '@/lib/supabase/database.types'
+import type { TurnoFormValues } from '@/schemas/turno-form-schema'
 import type { TurnoConCantidadReservas } from '@/types/types'
 
 // ------------------------------------------------------------
@@ -29,7 +30,7 @@ export async function obtenerTurnoPorId(id: string) {
 
 // ------------------------------------------------------------
 
-export async function crearTurno(nuevoTurno: Omit<Tables<'turnos'>, 'id' | 'creado_en'>) {
+export async function crearTurno(nuevoTurno: TurnoFormValues) {
   const { data, error } = await supabase.from('turnos').insert([nuevoTurno]).select().single()
 
   if (error) throw error
