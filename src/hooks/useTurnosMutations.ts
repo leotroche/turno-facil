@@ -1,6 +1,7 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 
 import type { Tables } from '@/lib/supabase/database.types'
+import type { TurnoFormValues } from '@/schemas/turno-form-schema'
 import { eliminarTurno, actualizarTurno, crearTurno } from '@/services/turno.service'
 
 export function useTurnosMutations() {
@@ -9,7 +10,7 @@ export function useTurnosMutations() {
   // ------------------------------------------------------------
 
   const crear = useMutation({
-    mutationFn: (nuevoTurno: Omit<Tables<'turnos'>, 'id' | 'creado_en'>) => crearTurno(nuevoTurno),
+    mutationFn: (nuevoTurno: TurnoFormValues) => crearTurno(nuevoTurno),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['turnos'] })
