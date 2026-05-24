@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { formatFecha, formatHora } from '@/lib/utils'
 import type { TurnoConCantidadReservas } from '@/types/types'
 
 import { Badge } from '../ui/badge'
@@ -49,10 +50,10 @@ export function TurnosTable({ turnos, onUpdate, onDelete, onClose, onReopen }: P
 
           return (
             <TableRow key={turno.id}>
-              <TableCell>{turno.fecha}</TableCell>
+              <TableCell>{formatFecha(turno.fecha)}</TableCell>
 
               <TableCell>
-                {turno.hora_inicio} - {turno.hora_fin}
+                {formatHora(turno.hora_inicio)} - {formatHora(turno.hora_fin)}
               </TableCell>
 
               <TableCell>{turno.materia}</TableCell>
