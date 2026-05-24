@@ -1,7 +1,6 @@
 import { supabase } from '@/lib/supabase/client'
-import type { Tables } from '@/lib/supabase/database.types'
 import type { TurnoFormValues } from '@/schemas/turno-form-schema'
-import type { TurnoConCantidadReservas } from '@/types/types'
+import type { Turno, TurnoConCantidadReservas } from '@/types/types'
 
 // ------------------------------------------------------------
 
@@ -21,7 +20,7 @@ export async function obtenerTurnos(): Promise<TurnoConCantidadReservas[]> {
 
 // ------------------------------------------------------------
 
-export async function obtenerTurnoPorId(id: string) {
+export async function obtenerTurnoPorId(id: string): Promise<Turno> {
   const { data, error } = await supabase.from('turnos').select('*').eq('id', id).single()
 
   if (error) throw error
@@ -30,7 +29,7 @@ export async function obtenerTurnoPorId(id: string) {
 
 // ------------------------------------------------------------
 
-export async function crearTurno(nuevoTurno: TurnoFormValues) {
+export async function crearTurno(nuevoTurno: TurnoFormValues): Promise<Turno> {
   const { data, error } = await supabase.from('turnos').insert([nuevoTurno]).select().single()
 
   if (error) throw error
@@ -39,7 +38,10 @@ export async function crearTurno(nuevoTurno: TurnoFormValues) {
 
 // ------------------------------------------------------------
 
-export async function actualizarTurno(id: string, updates: Partial<Tables<'turnos'>>) {
+export async function actualizarTurno(
+  id: string,
+  updates: Partial<TurnoFormValues>,
+): Promise<Turno> {
   const { data, error } = await supabase
     .from('turnos')
     .update(updates)
@@ -53,7 +55,7 @@ export async function actualizarTurno(id: string, updates: Partial<Tables<'turno
 
 // ------------------------------------------------------------
 
-export async function eliminarTurno(id: string) {
+export async function eliminarTurno(id: string): Promise<void> {
   const { error } = await supabase.from('turnos').delete().eq('id', id)
 
   if (error) throw error
