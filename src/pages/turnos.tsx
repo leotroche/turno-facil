@@ -7,7 +7,7 @@ import { CreateTurnoDialog } from '@/components/turnos/create-turno-dialog'
 import { TurnosGrid } from '@/components/turnos/turnos-grid'
 import { useTurnos } from '@/hooks/useTurnos'
 
-export default function Turnos() {
+export function Turnos() {
   const { turnos, isPending } = useTurnos()
   const [open, setOpen] = useState(false)
 
@@ -23,7 +23,7 @@ export default function Turnos() {
 
   return (
     <section className="flex flex-col items-center gap-8">
-      <h2 className="text-6xl">Turnos Programados</h2>
+      <h2 className="text-4xl">Turnos Programados</h2>
 
       {content}
 
