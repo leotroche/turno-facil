@@ -1,5 +1,6 @@
 import { CalendarPlus } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { EmptyState } from '@/components/empty-state'
 import { LoadingState } from '@/components/loading-state'
@@ -7,10 +8,12 @@ import { TurnoDialog } from '@/components/turnos/turno-dialog'
 import { TurnosTable } from '@/components/turnos/turnos-table'
 import { Button } from '@/components/ui/button'
 import { useTurnos } from '@/hooks/useTurnos'
+import { useTurnosMutations } from '@/hooks/useTurnosMutations'
 import type { TurnoConCantidadReservas } from '@/types/types'
 
 export function AdminTurnos() {
   const { turnos, isPending } = useTurnos()
+  const { eliminar, actualizar } = useTurnosMutations()
 
   const [open, setOpen] = useState(false)
 
@@ -26,6 +29,33 @@ export function AdminTurnos() {
     setOpen(true)
   }
 
+  const handleDelete = (id: string) => {
+    eliminar.mutate(id, {
+      onSuccess: () => toast.success('Turno eliminado correctamente'),
+      onError: () => toast.error('Error al eliminar el turno'),
+    })
+  }
+
+  const handleClose = (id: string) => {
+    actualizar.mutate(
+      { id, updates: { estado: 'cerrado' } },
+      {
+        onSuccess: () => toast.success('Turno cerrado correctamente'),
+        onError: () => toast.error('Error al cerrar el turno'),
+      },
+    )
+  }
+
+  const handleReopen = (id: string) => {
+    actualizar.mutate(
+      { id, updates: { estado: 'disponible' } },
+      {
+        onSuccess: () => toast.success('Turno reabierto correctamente'),
+        onError: () => toast.error('Error al reabrir el turno'),
+      },
+    )
+  }
+
   let content
 
   if (isPending) {
@@ -37,9 +67,9 @@ export function AdminTurnos() {
       <TurnosTable
         turnos={turnos}
         onUpdate={handleUpdate}
-        onDelete={(id) => console.log('delete', id)}
-        onClose={(id) => console.log('close', id)}
-        onReopen={(id) => console.log('reopen', id)}
+        onDelete={handleDelete}
+        onClose={handleClose}
+        onReopen={handleReopen}
       />
     )
   }
