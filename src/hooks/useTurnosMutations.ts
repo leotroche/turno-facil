@@ -1,10 +1,13 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 
+import type { TablesUpdate } from '@/lib/supabase/database.types'
 import type { TurnoFormValues } from '@/schemas/turno-form-schema'
-import { eliminarTurno, actualizarTurno, crearTurno } from '@/services/turno.service'
+import { eliminarTurno, actualizarTurno, crearTurno, crearReserva } from '@/services/turno.service'
 
 export function useTurnosMutations() {
   const queryClient = useQueryClient()
+
+  const invalidarTurnos = () => queryClient.invalidateQueries({ queryKey: ['turnos'] })
 
   // ------------------------------------------------------------
 
@@ -19,7 +22,7 @@ export function useTurnosMutations() {
   // ------------------------------------------------------------
 
   const actualizar = useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<TurnoFormValues> }) =>
+    mutationFn: ({ id, updates }: { id: string; updates: TablesUpdate<'turnos'> }) =>
       actualizarTurno(id, updates),
 
     onSuccess: () => {
@@ -39,9 +42,18 @@ export function useTurnosMutations() {
 
   // ------------------------------------------------------------
 
+  const reservar = useMutation({
+    mutationFn: (reserva: { turno_id: string; alumno: string; legajo: string }) =>
+      crearReserva(reserva),
+    onSuccess: invalidarTurnos,
+  })
+
+  // ------------------------------------------------------------
+
   return {
     crear,
     actualizar,
     eliminar,
+    reservar,
   }
 }

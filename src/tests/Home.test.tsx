@@ -11,7 +11,7 @@ test('debe mostrar el título y disparar la acción al hacer clic en el botón',
   render(<HomePage />)
 
   // 3. Verificamos que el título exista en la pantalla
-  const titulo = screen.getByText(/turno fácil/i)
+  const titulo = screen.getByText(/turno fácil web/i)
   expect(titulo).toBeDefined()
 
   // 4. Buscamos el botón por su texto y simulamos el clic
