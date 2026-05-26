@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase/client'
+import type { TablesUpdate } from '@/lib/supabase/database.types'
 import type { TurnoFormValues } from '@/schemas/turno-form-schema'
 import type { Turno, TurnoConCantidadReservas } from '@/types/types'
 
@@ -38,10 +39,7 @@ export async function crearTurno(nuevoTurno: TurnoFormValues): Promise<Turno> {
 
 // ------------------------------------------------------------
 
-export async function actualizarTurno(
-  id: string,
-  updates: Partial<TurnoFormValues>,
-): Promise<Turno> {
+export async function actualizarTurno(id: string, updates: TablesUpdate<'turnos'>): Promise<Turno> {
   const { data, error } = await supabase
     .from('turnos')
     .update(updates)
@@ -57,6 +55,18 @@ export async function actualizarTurno(
 
 export async function eliminarTurno(id: string): Promise<void> {
   const { error } = await supabase.from('turnos').delete().eq('id', id)
+
+  if (error) throw error
+}
+
+// ------------------------------------------------------------
+
+export async function crearReserva(reserva: {
+  turno_id: string
+  alumno: string
+  legajo: string
+}): Promise<void> {
+  const { error } = await supabase.from('reservas').insert([reserva])
 
   if (error) throw error
 }
