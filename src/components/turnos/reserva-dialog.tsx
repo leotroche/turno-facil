@@ -48,7 +48,7 @@ export function ReservaDialog({ turno, open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby={undefined}>
         <DialogHeader className="border-b pb-4">
           <DialogTitle>Reservar turno</DialogTitle>
         </DialogHeader>
