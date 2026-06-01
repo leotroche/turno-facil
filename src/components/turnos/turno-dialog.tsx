@@ -37,7 +37,7 @@ export function TurnoDialog({ open, onOpenChange, turno }: TurnoDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full sm:max-w-2xl">
+      <DialogContent className="w-full sm:max-w-2xl" aria-describedby={undefined}>
         <DialogHeader className="border-b pb-4">
           <DialogTitle>{isUpdating ? 'Modificar turno' : 'Crear nuevo turno'}</DialogTitle>
         </DialogHeader>
