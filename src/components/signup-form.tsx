@@ -1,31 +1,39 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import { register } from '@/services/auth.service'
+import { type UserRegisterFormValues, userRegisterSchema } from '@/schemas/user-form-schema'
+import { registrarUsuario } from '@/services/auth.service'
 
 export function SignupForm({ className, ...props }: React.ComponentProps<'div'>) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
-  // Para GET
-  // const { data } = useQuery({
-  //   queryKey: ['signup'],
-  //   queryFn: () => register({ email, password }),
-  // })
+  const form = useForm<UserRegisterFormValues>({
+    resolver: zodResolver(userRegisterSchema),
+    defaultValues: {
+      nombre: '',
+      apellido: '',
 
-  // Para POST, PUT, DELETE
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  })
+
   const {
     mutate: registerUser,
     error,
     data,
   } = useMutation({
-    mutationFn: () => register({ email, password }),
+    mutationFn: () => registrarUsuario({ email, password }),
   })
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
