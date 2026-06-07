@@ -6,19 +6,42 @@ import { supabase } from '@/lib/supabase/client'
 
 export function PublicLayout() {
   const [loading, setLoading] = useState(true)
-  const [authenticated, setAuthenticated] = useState(false)
+  const [redirectTo, setRedirectTo] = useState<string | null>(null)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setAuthenticated(!!data.session)
+    const check = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session?.user) {
+        setLoading(false)
+        return
+      }
+
+      const { data: perfil } = await supabase
+        .from('perfiles')
+        .select('rol')
+        .eq('id', session.user.id)
+        .single()
+
+      if (!perfil) {
+        setLoading(false)
+        return
+      }
+
+      setRedirectTo(perfil.rol === 'docente' ? '/docentes' : '/alumnos')
+
       setLoading(false)
-    })
+    }
+
+    check()
   }, [])
 
   if (loading) return <LoadingState />
 
-  if (authenticated) {
-    return <Navigate to="/turnos" replace />
+  if (redirectTo) {
+    return <Navigate to={redirectTo} replace />
   }
 
   return <Outlet />

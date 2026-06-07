@@ -18,7 +18,7 @@ export function PrivateLayout() {
   if (loading) return <LoadingState />
 
   if (!authenticated) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/login" replace />
   }
 
   return <Outlet />

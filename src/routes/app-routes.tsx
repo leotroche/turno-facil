@@ -1,9 +1,11 @@
 import { Route, Routes } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 
-import { AdminTurnos } from '@/pages/admin-turnos'
-import { HomePage } from '@/pages/Home'
-import { SignupPage } from '@/pages/signup'
+import { LoginForm } from '@/components/login-form'
+import { PrivateLayout } from '@/layouts/private-layout'
+import { PublicLayout } from '@/layouts/public-layout'
+import { DocenteTurnos } from '@/pages/docente-turnos'
+import { RegisterPage } from '@/pages/register'
 import { Turnos } from '@/pages/turnos'
 
 export function AppRoutes() {
@@ -12,10 +14,20 @@ export function AppRoutes() {
       <ToastContainer theme="dark" position="bottom-right" />
 
       <Routes>
-        <Route index Component={HomePage} />
-        <Route path="/signup" Component={SignupPage} />
-        <Route path="/turnos" Component={Turnos} />
-        <Route path="/admin/turnos" Component={AdminTurnos} />
+        {/* Públicas */}
+        <Route element={<PublicLayout />}>
+          <Route path="/login" Component={LoginForm} />
+          <Route path="/register" Component={RegisterPage} />
+        </Route>
+
+        {/* Privadas */}
+        <Route element={<PrivateLayout />}>
+          <Route path="/alumnos" Component={Turnos} />
+        </Route>
+
+        <Route element={<PrivateLayout />}>
+          <Route path="/docentes" Component={DocenteTurnos} />
+        </Route>
       </Routes>
     </div>
   )

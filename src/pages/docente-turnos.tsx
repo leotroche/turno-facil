@@ -11,7 +11,7 @@ import { useTurnos } from '@/hooks/useTurnos'
 import { useTurnosMutations } from '@/hooks/useTurnosMutations'
 import type { TurnoConCantidadReservas } from '@/types/types'
 
-export function AdminTurnos() {
+export function DocenteTurnos() {
   const { turnos, isPending } = useTurnos()
   const { eliminar, actualizar } = useTurnosMutations()
 
