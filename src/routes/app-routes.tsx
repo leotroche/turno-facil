@@ -1,10 +1,10 @@
 import { Route, Routes } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 
-import { LoginForm } from '@/components/login-form'
 import { PrivateLayout } from '@/layouts/private-layout'
 import { PublicLayout } from '@/layouts/public-layout'
 import { DocenteTurnos } from '@/pages/docente-turnos'
+import { LoginPage } from '@/pages/login'
 import { RegisterPage } from '@/pages/register'
 import { Turnos } from '@/pages/turnos'
 
@@ -16,7 +16,7 @@ export function AppRoutes() {
       <Routes>
         {/* Públicas */}
         <Route element={<PublicLayout />}>
-          <Route path="/login" Component={LoginForm} />
+          <Route path="/login" Component={LoginPage} />
           <Route path="/register" Component={RegisterPage} />
         </Route>
 

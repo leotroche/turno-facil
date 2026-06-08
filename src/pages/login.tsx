@@ -1,9 +1,9 @@
-import { RegisterForm } from '@/components/register-form'
+import { LoginForm } from '@/components/login-form'
 
-export function RegisterPage() {
+export function LoginPage() {
   return (
     <div className="grid h-[80dvh] w-full place-items-center">
-      <RegisterForm />
+      <LoginForm />
     </div>
   )
 }
