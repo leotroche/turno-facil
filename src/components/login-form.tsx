@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,8 @@ import { loginSchema, type LoginFormValues } from '@/schemas/user-form-schema'
 import { login } from '@/services/auth.service'
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
+  const navigate = useNavigate()
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -24,6 +26,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
     try {
       await login(data)
       toast.success('Usuario iniciado sesión exitosamente')
+      navigate('/alumno')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Error al iniciar sesión')
     }

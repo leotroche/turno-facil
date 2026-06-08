@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,8 @@ import { type RegisterFormValues, registerSchema } from '@/schemas/user-form-sch
 import { register } from '@/services/auth.service'
 
 export function RegisterForm({ className, ...props }: React.ComponentProps<'div'>) {
+  const navigate = useNavigate()
+
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -26,6 +28,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
     try {
       await register(data)
       toast.success('Usuario registrado exitosamente')
+      navigate('/login')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Error al registrar usuario')
     }

@@ -36,10 +36,7 @@ export async function register({ nombre, email, password, legajo }: RegisterForm
   // 3. Completar perfil creado por trigger
   const { error: perfilError } = await supabase
     .from('perfiles')
-    .update({
-      nombre,
-      legajo,
-    })
+    .update({ nombre, legajo })
     .eq('id', userId)
 
   if (perfilError) {
