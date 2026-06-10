@@ -1,93 +1,197 @@
-'use client'
+// import { createContext, useContext, useEffect, useState } from 'react'
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+// import { supabase } from '@/lib/supabase/client'
+// import type { Tables } from '@/lib/supabase/database.types'
+
+// type Perfil = Tables<'perfiles'>
+
+// type AuthContextType = {
+//   user: Perfil | null
+//   loading: boolean
+// }
+
+// const AuthContext = createContext<AuthContextType>({
+//   user: null,
+//   loading: true,
+// })
+
+// export function AuthProvider({ children }: { children: React.ReactNode }) {
+//   const [user, setUser] = useState<Perfil | null>(null)
+//   const [loading, setLoading] = useState(true)
+
+//   useEffect(() => {
+//     const loadUser = async () => {
+//       const { data: auth } = await supabase.auth.getUser()
+
+//       if (!auth.user) {
+//         setUser(null)
+//         setLoading(false)
+//         return
+//       }
+
+//       const { data } = await supabase.from('perfiles').select('*').eq('id', auth.user.id).single()
+
+//       setUser(data)
+//       setLoading(false)
+//     }
+
+//     loadUser()
+//   }, [])
+
+//   return (
+//     <AuthContext.Provider
+//       value={{
+//         user,
+//         loading,
+//       }}
+//     >
+//       {children}
+//     </AuthContext.Provider>
+//   )
+// }
+
+// export const useAuth = () => useContext(AuthContext)
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import { supabase } from '@/lib/supabase/client'
-import type { RegisterFormValues } from '@/schemas/user-form-schema'
-import { register } from '@/services/auth.service'
+import type { Tables } from '@/lib/supabase/database.types'
+import type { LoginFormValues, RegisterFormValues } from '@/schemas/user-form-schema'
 
-type Usuario = {
-  creado_en: string
-  id: string
-  legajo: string | null
-  nombre: string | null
-  rol: string
-} | null
+type Perfil = Tables<'perfiles'>
 
 type AuthContextType = {
-  usuario: Usuario
+  user: Perfil | null
   loading: boolean
-
-  registrar: (data: RegisterFormValues) => Promise<void>
-  login: (email: string, password: string) => Promise<void>
-
+  login: (data: LoginFormValues) => Promise<void>
+  register: (data: RegisterFormValues) => Promise<void>
   logout: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  loading: true,
+  login: async () => {},
+  logout: async () => {},
+  register: async () => {},
+})
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [usuario, setUsuario] = useState<Usuario>(null)
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<Perfil | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const cargarPerfil = async (userId: string) => {
-    const { data } = await supabase.from('perfiles').select('*').eq('id', userId).single()
-    setUsuario(data)
+  // --------------------------------------------------
+  // CARGAR PERFIL
+  // --------------------------------------------------
+
+  const loadUser = async () => {
+    const { data: auth } = await supabase.auth.getUser()
+
+    if (!auth.user) {
+      setUser(null)
+      setLoading(false)
+      return
+    }
+
+    const { data } = await supabase.from('perfiles').select('*').eq('id', auth.user.id).single()
+
+    setUser(data)
+    setLoading(false)
   }
 
-  const login = async (email: string, password: string) => {
+  useEffect(() => {
+    loadUser()
+
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
+      loadUser()
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
+  }, [])
+
+  // --------------------------------------------------
+  // LOGIN
+  // --------------------------------------------------
+
+  const login = async ({ email, password }: LoginFormValues) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
 
     if (error) throw error
+
+    await loadUser()
   }
 
+  // --------------------------------------------------
+  // LOGOUT
+  // --------------------------------------------------
+
   const logout = async () => {
-    const { error } = await supabase.auth.signOut()
+    await supabase.auth.signOut()
+    setUser(null)
+  }
+
+  // --------------------------------------------------
+  // REGISTER
+  // --------------------------------------------------
+
+  const register = async ({ nombre, email, password, legajo }: RegisterFormValues) => {
+    // 1. verificar legajo
+    const { data: existente, error: existenteError } = await supabase
+      .from('perfiles')
+      .select('id')
+      .eq('legajo', legajo)
+      .maybeSingle()
+
+    if (existenteError) throw existenteError
+
+    if (existente) {
+      throw new Error('El legajo ya está registrado')
+    }
+
+    // 2. crear auth user
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    })
 
     if (error) throw error
 
-    setUsuario(null)
-  }
+    const userId = data.user?.id
 
-  useEffect(() => {
-    const init = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-
-      if (session?.user) {
-        await cargarPerfil(session.user.id)
-      }
-
-      setLoading(false)
+    if (!userId) {
+      throw new Error('No se pudo obtener el usuario creado')
     }
 
-    init()
+    // 3. completar perfil
+    const { error: perfilError } = await supabase
+      .from('perfiles')
+      .update({ nombre, legajo })
+      .eq('id', userId)
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_, session) => {
-      if (session?.user) {
-        await cargarPerfil(session.user.id)
-      } else {
-        setUsuario(null)
+    if (perfilError) {
+      if (perfilError.code === '23505') {
+        throw new Error('El legajo ya está registrado')
       }
-    })
+      throw perfilError
+    }
 
-    return () => subscription.unsubscribe()
-  }, [])
+    await loadUser()
+  }
+
+  // --------------------------------------------------
 
   return (
     <AuthContext.Provider
       value={{
-        usuario,
+        user,
         loading,
-        registrar: register,
         login,
         logout,
+        register,
       }}
     >
       {children}
@@ -95,11 +199,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function useAuth() {
+// --------------------------------------------------
+
+export const useAuth = () => {
   const context = useContext(AuthContext)
 
   if (!context) {
-    throw new Error('useAuth debe usarse dentro de AuthProvider')
+    throw new Error('useAuth debe ser usado dentro de un AuthProvider')
   }
 
   return context

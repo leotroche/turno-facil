@@ -7,11 +7,13 @@ import { LoadingState } from '@/components/loading-state'
 import { TurnoDialog } from '@/components/turnos/turno-dialog'
 import { TurnosTable } from '@/components/turnos/turnos-table'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/context/auth'
 import { useTurnos } from '@/hooks/useTurnos'
 import { useTurnosMutations } from '@/hooks/useTurnosMutations'
 import type { TurnoConCantidadReservas } from '@/types/types'
 
 export function DocenteTurnos() {
+  const { logout } = useAuth()
   const { turnos, isPending } = useTurnos()
   const { eliminar, actualizar } = useTurnosMutations()
 
@@ -75,15 +77,32 @@ export function DocenteTurnos() {
   }
 
   return (
-    <section className="space-y-8">
-      <header className="flex items-center justify-between">
-        <h2 className="text-2xl font-medium">Gestión de turnos</h2>
+    <section className="flex flex-col gap-10">
+      {/* HEADER */}
+      <header className="bg-card flex w-full items-center justify-between rounded-2xl border px-8 py-6 shadow-sm">
+        {/* INFO */}
+        <div className="flex flex-col gap-1">
+          <span className="text-muted-foreground text-xs tracking-wide uppercase">
+            Panel docente
+          </span>
 
-        <Button onClick={handleCreate} size="lg">
-          <CalendarPlus /> Crear turno
-        </Button>
+          <h2 className="text-3xl leading-tight font-semibold">Gestión de turnos</h2>
+        </div>
+
+        {/* ACTIONS */}
+        <div className="flex items-center gap-3">
+          <Button onClick={handleCreate}>
+            <CalendarPlus />
+            Crear turno
+          </Button>
+
+          <Button variant="outline" onClick={logout}>
+            Cerrar sesión
+          </Button>
+        </div>
       </header>
 
+      {/* CONTENT */}
       {content}
 
       <TurnoDialog open={open} onOpenChange={setOpen} turno={selectedTurno} />

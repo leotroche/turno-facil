@@ -3,12 +3,18 @@ import { Navigate, Outlet } from 'react-router'
 import { LoadingState } from '@/components/loading-state'
 import { useAuth } from '@/context/auth'
 
-export function PublicLayout() {
+type Props = {
+  role: 'alumno' | 'docente'
+}
+
+export function ProtectedLayout({ role }: Props) {
   const { user, loading } = useAuth()
 
   if (loading) return <LoadingState />
 
-  if (user) return <Navigate to={`/${user.rol}`} replace />
+  if (!user) return <Navigate to="/login" replace />
+
+  if (user.rol !== role) return <Navigate to={`/${user.rol}`} replace />
 
   return <Outlet />
 }
