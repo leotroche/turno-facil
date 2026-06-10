@@ -4,11 +4,13 @@ import { LoadingState } from '@/components/loading-state'
 import { useAuth } from '@/context/auth'
 
 export function PublicLayout() {
-  const { user, loading } = useAuth()
+  const { loading, isAuthenticated, user } = useAuth()
 
   if (loading) return <LoadingState />
 
-  if (user) return <Navigate to={`/${user.rol}`} replace />
+  if (isAuthenticated && user) {
+    return <Navigate to={`/${user.rol}`} replace />
+  }
 
   return <Outlet />
 }

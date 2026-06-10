@@ -8,13 +8,13 @@ type Props = {
 }
 
 export function ProtectedLayout({ role }: Props) {
-  const { user, loading } = useAuth()
+  const { user, loading, isAuthenticated } = useAuth()
 
   if (loading) return <LoadingState />
 
-  if (!user) return <Navigate to="/login" replace />
+  if (!isAuthenticated) return <Navigate to="/login" replace />
 
-  if (user.rol !== role) return <Navigate to={`/${user.rol}`} replace />
+  if (user && user.rol !== role) return <Navigate to={`/${user.rol}`} replace />
 
   return <Outlet />
 }
