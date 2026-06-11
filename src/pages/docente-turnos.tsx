@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/empty-state'
 import { LoadingState } from '@/components/loading-state'
 import { TurnoDialog } from '@/components/turnos/turno-dialog'
 import { TurnosTable } from '@/components/turnos/turnos-table'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/auth'
 import { useTurnos } from '@/hooks/useTurnos'
@@ -13,12 +14,11 @@ import { useTurnosMutations } from '@/hooks/useTurnosMutations'
 import type { TurnoConCantidadReservas } from '@/types/types'
 
 export function DocenteTurnos() {
-  const { logout } = useAuth()
+  const { user, logout } = useAuth()
   const { turnos, isPending } = useTurnos()
   const { eliminar, actualizar } = useTurnosMutations()
 
   const [open, setOpen] = useState(false)
-
   const [selectedTurno, setSelectedTurno] = useState<TurnoConCantidadReservas>()
 
   const handleCreate = () => {
@@ -78,31 +78,33 @@ export function DocenteTurnos() {
 
   return (
     <section className="flex flex-col gap-10">
-      {/* HEADER */}
       <header className="bg-card flex w-full items-center justify-between rounded-2xl border px-8 py-6 shadow-sm">
-        {/* INFO */}
-        <div className="flex flex-col gap-1">
-          <span className="text-muted-foreground text-xs tracking-wide uppercase">
-            Panel docente
-          </span>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <Badge>Docente</Badge>
 
-          <h2 className="text-3xl leading-tight font-semibold">Gestión de turnos</h2>
+            {user?.legajo && <Badge variant="secondary">{user.legajo}</Badge>}
+          </div>
+
+          <h2 className="text-2xl font-semibold">{user?.nombre}</h2>
         </div>
 
-        {/* ACTIONS */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Button onClick={handleCreate}>
             <CalendarPlus />
             Crear turno
           </Button>
 
-          <Button variant="outline" onClick={logout}>
+          <Button variant="outline" onClick={() => window.location.reload()}>
+            Refrescar
+          </Button>
+
+          <Button variant="destructive" onClick={logout}>
             Cerrar sesión
           </Button>
         </div>
       </header>
 
-      {/* CONTENT */}
       {content}
 
       <TurnoDialog open={open} onOpenChange={setOpen} turno={selectedTurno} />
