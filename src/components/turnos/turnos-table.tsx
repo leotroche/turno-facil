@@ -7,14 +7,14 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatFecha, formatHora } from '@/lib/utils'
-import type { TurnoConCantidadReservas } from '@/types/types'
+import type { Turno } from '@/types/types'
 
 import { Badge } from '../ui/badge'
 import { TurnoActionDropdown } from './turno-action-dropdown'
 
 type Props = {
-  turnos: TurnoConCantidadReservas[]
-  onUpdate: (turno: TurnoConCantidadReservas) => void
+  turnos: Turno[]
+  onUpdate: (turno: Turno) => void
   onDelete: (id: string) => void
   onClose: (id: string) => void
   onReopen: (id: string) => void
@@ -60,7 +60,7 @@ export function TurnosTable({ turnos, onUpdate, onDelete, onClose, onReopen }: P
 
               <TableCell>{turno.tipo}</TableCell>
 
-              <TableCell>{turno.docente}</TableCell>
+              <TableCell>{turno.docente.nombre}</TableCell>
 
               <TableCell>{turno.ubicacion}</TableCell>
 

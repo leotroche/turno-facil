@@ -1,16 +1,13 @@
 import type { Tables, TablesUpdate } from '@/lib/supabase/database.types'
 
-export type TurnoConCantidadReservas = TurnoRow & {
-  cantidad_reservas: number
-}
 // ------------------------------------------------------------
 
 export type Perfil = Tables<'perfiles'>
 
-// ------------------------------------------------------------
-
 export type TurnoRow = Tables<'turnos'>
 export type TurnoRowUpdate = TablesUpdate<'turnos'>
+
+// ------------------------------------------------------------
 
 export type Docente = {
   id: string

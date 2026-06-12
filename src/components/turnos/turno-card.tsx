@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { formatFecha, formatHora } from '@/lib/utils'
-import type { TurnoConCantidadReservas } from '@/types/types'
+import type { Turno } from '@/types/types'
 
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '../ui/separator'
 import { ReservaDialog } from './reserva-dialog'
 
-export function TurnoCard({ turno }: { turno: TurnoConCantidadReservas }) {
+export function TurnoCard({ turno }: { turno: Turno }) {
   const [openReserva, setOpenReserva] = useState(false)
 
   const isFull = turno.estado === 'lleno'
@@ -54,7 +54,7 @@ export function TurnoCard({ turno }: { turno: TurnoConCantidadReservas }) {
 
           <div className="space-y-1">
             <p className="text-muted-foreground">Docente</p>
-            <p className="font-medium">{turno.docente}</p>
+            <p className="font-medium">{turno.docente.nombre}</p>
           </div>
 
           <div className="space-y-1">

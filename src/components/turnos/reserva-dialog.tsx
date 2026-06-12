@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 
 import { useTurnosMutations } from '@/hooks/useTurnosMutations'
 import { reservaFormSchema, type ReservaFormValues } from '@/schemas/reserva-form-schema'
-import type { TurnoConCantidadReservas } from '@/types/types'
+import type { Turno } from '@/types/types'
 
 import { Button } from '../ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
@@ -12,7 +12,7 @@ import { Field, FieldError, FieldLabel } from '../ui/field'
 import { Input } from '../ui/input'
 
 type Props = {
-  turno: TurnoConCantidadReservas
+  turno: Turno
   open: boolean
   onOpenChange: (open: boolean) => void
 }

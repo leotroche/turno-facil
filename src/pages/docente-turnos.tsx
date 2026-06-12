@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/auth'
 import { useTurnos } from '@/hooks/useTurnos'
 import { useTurnosMutations } from '@/hooks/useTurnosMutations'
-import type { TurnoConCantidadReservas } from '@/types/types'
+import type { Turno } from '@/types/types'
 
 export function DocenteTurnos() {
   const { user, logout } = useAuth()
@@ -19,14 +19,14 @@ export function DocenteTurnos() {
   const { eliminar, actualizar } = useTurnosMutations()
 
   const [open, setOpen] = useState(false)
-  const [selectedTurno, setSelectedTurno] = useState<TurnoConCantidadReservas>()
+  const [selectedTurno, setSelectedTurno] = useState<Turno>()
 
   const handleCreate = () => {
     setSelectedTurno(undefined)
     setOpen(true)
   }
 
-  const handleUpdate = (turno: TurnoConCantidadReservas) => {
+  const handleUpdate = (turno: Turno) => {
     setSelectedTurno(turno)
     setOpen(true)
   }

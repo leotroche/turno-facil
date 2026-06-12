@@ -61,7 +61,21 @@ export async function obtenerTurnoPorId(id: string): Promise<Turno> {
 // ------------------------------------------------------------
 
 export async function crearTurno(nuevoTurno: TurnoFormValues): Promise<TurnoRow> {
-  const { data, error } = await supabase.from('turnos').insert(nuevoTurno).select().single()
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+
+  if (authError || !user) throw new Error('No autenticado')
+
+  const { data, error } = await supabase
+    .from('turnos')
+    .insert({
+      ...nuevoTurno,
+      docente_id: user.id,
+    })
+    .select()
+    .single()
 
   if (error) throw error
   return data
