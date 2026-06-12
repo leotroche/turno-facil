@@ -24,7 +24,7 @@ export const turnoFormSchema = z
         message: 'Fuera de horario (08:00–22:00)',
       }),
 
-    docente: z.string().min(1, 'Requerido').max(100, 'Máx. 100 caracteres'),
+    docente_id: z.string().min(1, 'Requerido'),
 
     ubicacion: z.string().min(1, 'Requerido').max(100, 'Máx. 100 caracteres'),
 

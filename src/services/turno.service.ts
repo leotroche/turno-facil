@@ -1,28 +1,67 @@
 import { supabase } from '@/lib/supabase/client'
-import type { TablesUpdate } from '@/lib/supabase/database.types'
+import type { ReservaFormValues } from '@/schemas/reserva-form-schema'
 import type { TurnoFormValues } from '@/schemas/turno-form-schema'
-import type { Turno, TurnoConCantidadReservas } from '@/types/types'
+import type { Turno, TurnoRow, TurnoRowUpdate } from '@/types/types'
 
 // ------------------------------------------------------------
+// SERVICIOS PARA TURNOS
+// ------------------------------------------------------------
 
-export async function obtenerTurnos(): Promise<TurnoConCantidadReservas[]> {
+export async function obtenerTurnos(): Promise<Turno[]> {
   const { data, error } = await supabase
     .from('turnos')
-    .select('*, reservas(id)')
+    .select(`
+      *,
+      docente:perfiles!turnos_docente_id_fkey (
+        id,
+        nombre,
+        legajo,
+        rol
+      ),
+      reservas(id)
+    `)
     .order('fecha', { ascending: true })
 
   if (error) throw error
 
-  return data.map((turno) => ({
+  return data.map(({ reservas, docente, docente_id: _, ...turno }) => ({
     ...turno,
-    cantidad_reservas: turno.reservas.length,
+    docente: docente,
+    cantidad_reservas: reservas.length,
   }))
 }
 
 // ------------------------------------------------------------
 
 export async function obtenerTurnoPorId(id: string): Promise<Turno> {
-  const { data, error } = await supabase.from('turnos').select('*').eq('id', id).single()
+  const { data, error } = await supabase
+    .from('turnos')
+    .select(`
+      *,
+      docente:perfiles!turnos_docente_id_fkey (
+        id,
+        nombre,
+        legajo,
+        rol
+      ),
+      reservas(id)
+    `)
+    .eq('id', id)
+    .single()
+
+  if (error) throw error
+
+  return {
+    ...data,
+    docente: data.docente,
+    cantidad_reservas: data.reservas.length,
+  }
+}
+
+// ------------------------------------------------------------
+
+export async function crearTurno(nuevoTurno: TurnoFormValues): Promise<TurnoRow> {
+  const { data, error } = await supabase.from('turnos').insert(nuevoTurno).select().single()
 
   if (error) throw error
   return data
@@ -30,16 +69,7 @@ export async function obtenerTurnoPorId(id: string): Promise<Turno> {
 
 // ------------------------------------------------------------
 
-export async function crearTurno(nuevoTurno: TurnoFormValues): Promise<Turno> {
-  const { data, error } = await supabase.from('turnos').insert([nuevoTurno]).select().single()
-
-  if (error) throw error
-  return data
-}
-
-// ------------------------------------------------------------
-
-export async function actualizarTurno(id: string, updates: TablesUpdate<'turnos'>): Promise<Turno> {
+export async function actualizarTurno(id: string, updates: TurnoRowUpdate): Promise<TurnoRow> {
   const { data, error } = await supabase
     .from('turnos')
     .update(updates)
@@ -60,13 +90,11 @@ export async function eliminarTurno(id: string): Promise<void> {
 }
 
 // ------------------------------------------------------------
+// SERVICIOS PARA RESERVAS
+// ------------------------------------------------------------
 
-export async function crearReserva(reserva: {
-  turno_id: string
-  alumno: string
-  legajo: string
-}): Promise<void> {
-  const { error } = await supabase.from('reservas').insert([reserva])
+export async function crearReserva(reserva: ReservaFormValues): Promise<void> {
+  const { error } = await supabase.from('reservas').insert(reserva)
 
   if (error) throw error
 }

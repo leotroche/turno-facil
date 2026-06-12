@@ -1,8 +1,9 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 
-import type { TablesUpdate } from '@/lib/supabase/database.types'
+import type { ReservaFormValues } from '@/schemas/reserva-form-schema'
 import type { TurnoFormValues } from '@/schemas/turno-form-schema'
 import { eliminarTurno, actualizarTurno, crearTurno, crearReserva } from '@/services/turno.service'
+import type { TurnoRowUpdate } from '@/types/types'
 
 export function useTurnosMutations() {
   const queryClient = useQueryClient()
@@ -22,7 +23,7 @@ export function useTurnosMutations() {
   // ------------------------------------------------------------
 
   const actualizar = useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: TablesUpdate<'turnos'> }) =>
+    mutationFn: ({ id, updates }: { id: string; updates: TurnoRowUpdate }) =>
       actualizarTurno(id, updates),
 
     onSuccess: () => {
@@ -43,8 +44,7 @@ export function useTurnosMutations() {
   // ------------------------------------------------------------
 
   const reservar = useMutation({
-    mutationFn: (reserva: { turno_id: string; alumno: string; legajo: string }) =>
-      crearReserva(reserva),
+    mutationFn: (reserva: ReservaFormValues) => crearReserva(reserva),
     onSuccess: invalidarTurnos,
   })
 
