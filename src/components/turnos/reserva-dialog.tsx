@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 
 import { useTurnosMutations } from '@/hooks/useTurnosMutations'
 import { reservaFormSchema, type ReservaFormValues } from '@/schemas/reserva-form-schema'
-import type { TurnoConCantidadReservas } from '@/types/types'
+import type { Turno } from '@/types/types'
 
 import { Button } from '../ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
@@ -12,7 +12,7 @@ import { Field, FieldError, FieldLabel } from '../ui/field'
 import { Input } from '../ui/input'
 
 type Props = {
-  turno: TurnoConCantidadReservas
+  turno: Turno
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -23,14 +23,14 @@ export function ReservaDialog({ turno, open, onOpenChange }: Props) {
   const form = useForm<ReservaFormValues>({
     resolver: zodResolver(reservaFormSchema),
     defaultValues: {
-      alumno: '',
-      legajo: '',
+      alumno_id: '',
+      turno_id: turno.id,
     },
   })
 
   const handleSubmit = (data: ReservaFormValues) => {
     reservar.mutate(
-      { turno_id: turno.id, alumno: data.alumno, legajo: data.legajo },
+      { turno_id: turno.id, alumno_id: data.alumno_id },
       {
         onSuccess: () => {
           toast.success('Reserva realizada correctamente')
@@ -56,14 +56,14 @@ export function ReservaDialog({ turno, open, onOpenChange }: Props) {
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-2">
           <Field>
             <FieldLabel>Nombre completo</FieldLabel>
-            <Input {...form.register('alumno')} placeholder="Juan Pérez" />
-            <FieldError>{form.formState.errors.alumno?.message}</FieldError>
+            <Input {...form.register('alumno_id')} placeholder="Juan Pérez" />
+            <FieldError>{form.formState.errors.alumno_id?.message}</FieldError>
           </Field>
 
           <Field>
             <FieldLabel>Legajo</FieldLabel>
-            <Input {...form.register('legajo')} placeholder="12345678" />
-            <FieldError>{form.formState.errors.legajo?.message}</FieldError>
+            <Input {...form.register('turno_id')} placeholder="12345678" />
+            <FieldError>{form.formState.errors.turno_id?.message}</FieldError>
           </Field>
 
           <div className="flex justify-end gap-2 border-t pt-4">

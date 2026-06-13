@@ -1,6 +1,6 @@
 import { MoreHorizontal, Pencil, Unlock, Trash2, Lock } from 'lucide-react'
 
-import type { TurnoConCantidadReservas } from '@/types/types'
+import type { Turno } from '@/types/types'
 
 import {
   AlertDialogTrigger,
@@ -23,8 +23,8 @@ import {
 } from '../ui/dropdown-menu'
 
 type Props = {
-  turno: TurnoConCantidadReservas
-  onUpdate: (turno: TurnoConCantidadReservas) => void
+  turno: Turno
+  onUpdate: (turno: Turno) => void
   onDelete: (id: string) => void
   onClose: (id: string) => void
   onReopen: (id: string) => void

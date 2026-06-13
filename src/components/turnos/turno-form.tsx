@@ -28,8 +28,7 @@ export function TurnoForm({ initialValues, onSubmit }: TurnoFormProps) {
       hora_inicio: '08:00',
       hora_fin: '10:00',
 
-      docente: '',
-      ubicacion: '',
+      ubicacion: 'Universidad Nacional de Quilmes - Aula 213',
       cupo_maximo: 25,
 
       ...initialValues,
@@ -37,8 +36,9 @@ export function TurnoForm({ initialValues, onSubmit }: TurnoFormProps) {
   })
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      {/* INFO GENERAL */}
+      <FieldGroup className="grid grid-cols-1 gap-4">
         <Field>
           <FieldLabel>Materia</FieldLabel>
           <Input {...form.register('materia')} />
@@ -51,14 +51,15 @@ export function TurnoForm({ initialValues, onSubmit }: TurnoFormProps) {
           <FieldError>{form.formState.errors.tipo?.message}</FieldError>
         </Field>
 
-        <Field className="col-span-2">
+        <Field>
           <FieldLabel>Descripción (opcional)</FieldLabel>
-          <Textarea {...form.register('descripcion')} className="resize-none" />
+          <Textarea className="resize-none" {...form.register('descripcion')} />
           <FieldError>{form.formState.errors.descripcion?.message}</FieldError>
         </Field>
       </FieldGroup>
 
-      <FieldGroup className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* FECHA Y HORARIO */}
+      <FieldGroup className="grid grid-cols-3 gap-4">
         <Field>
           <FieldLabel>Fecha</FieldLabel>
           <Input type="date" className="dark:scheme-dark" {...form.register('fecha')} />
@@ -66,31 +67,28 @@ export function TurnoForm({ initialValues, onSubmit }: TurnoFormProps) {
         </Field>
 
         <Field>
-          <FieldLabel>Hora inicio</FieldLabel>
+          <FieldLabel>Inicio</FieldLabel>
           <Input type="time" className="dark:scheme-dark" {...form.register('hora_inicio')} />
           <FieldError>{form.formState.errors.hora_inicio?.message}</FieldError>
         </Field>
 
         <Field>
-          <FieldLabel>Hora fin</FieldLabel>
+          <FieldLabel>Fin</FieldLabel>
           <Input type="time" className="dark:scheme-dark" {...form.register('hora_fin')} />
           <FieldError>{form.formState.errors.hora_fin?.message}</FieldError>
         </Field>
+      </FieldGroup>
 
-        <Field>
-          <FieldLabel>Docente</FieldLabel>
-          <Input type="text" {...form.register('docente')} />
-          <FieldError>{form.formState.errors.docente?.message}</FieldError>
-        </Field>
-
-        <Field>
+      {/* CONFIGURACIÓN */}
+      <FieldGroup className="grid grid-cols-3 gap-4">
+        <Field className="col-span-2">
           <FieldLabel>Ubicación</FieldLabel>
-          <Input type="text" {...form.register('ubicacion')} />
+          <Input {...form.register('ubicacion')} />
           <FieldError>{form.formState.errors.ubicacion?.message}</FieldError>
         </Field>
 
         <Field>
-          <FieldLabel>Cupo máximo</FieldLabel>
+          <FieldLabel>Cupo</FieldLabel>
           <Input
             type="number"
             className="dark:scheme-dark"
@@ -102,6 +100,7 @@ export function TurnoForm({ initialValues, onSubmit }: TurnoFormProps) {
         </Field>
       </FieldGroup>
 
+      {/* ACTIONS */}
       <div className="flex justify-end border-t pt-4">
         <Button type="submit">{initialValues ? 'Modificar turno' : 'Crear turno'}</Button>
       </div>
