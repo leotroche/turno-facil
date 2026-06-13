@@ -24,8 +24,6 @@ export function TurnoDialog({ open, onOpenChange, turno }: TurnoDialogProps) {
   }
 
   const handleSubmit = async (data: TurnoFormValues) => {
-    console.log('Submitting turno:', data)
-
     if (isUpdating) {
       actualizar.mutate(
         { id: turno.id, updates: data },

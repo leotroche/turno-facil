@@ -25,20 +25,25 @@ export function TurnosTable({ turnos, onUpdate, onDelete, onClose, onReopen }: P
     <Table>
       <TableHeader>
         <TableRow>
+          {/* TIEMPO */}
           <TableHead>Fecha</TableHead>
           <TableHead>Horario</TableHead>
 
+          {/* CONTENIDO */}
           <TableHead>Materia</TableHead>
           <TableHead>Tipo</TableHead>
 
-          <TableHead>Docente</TableHead>
+          {/* LOGÍSTICA */}
           <TableHead>Ubicación</TableHead>
 
+          {/* CAPACIDAD */}
           <TableHead>Cupo</TableHead>
           <TableHead>Reservas</TableHead>
 
+          {/* ESTADO */}
           <TableHead>Estado</TableHead>
 
+          {/* ACCIONES */}
           <TableHead className="text-right">Acciones</TableHead>
         </TableRow>
       </TableHeader>
@@ -50,30 +55,31 @@ export function TurnosTable({ turnos, onUpdate, onDelete, onClose, onReopen }: P
 
           return (
             <TableRow key={turno.id}>
+              {/* TIEMPO */}
               <TableCell>{formatFecha(turno.fecha)}</TableCell>
-
               <TableCell>
                 {formatHora(turno.hora_inicio)} - {formatHora(turno.hora_fin)}
               </TableCell>
 
+              {/* CONTENIDO */}
               <TableCell>{turno.materia}</TableCell>
-
               <TableCell>{turno.tipo}</TableCell>
 
-              <TableCell>{turno.docente.nombre}</TableCell>
-
+              {/* LOGÍSTICA */}
               <TableCell>{turno.ubicacion}</TableCell>
 
+              {/* CAPACIDAD */}
               <TableCell>{turno.cupo_maximo}</TableCell>
-
               <TableCell>{turno.cantidad_reservas}</TableCell>
 
+              {/* ESTADO */}
               <TableCell>
                 <Badge variant={isFull ? 'destructive' : isClosed ? 'secondary' : 'success'}>
                   {turno.estado}
                 </Badge>
               </TableCell>
 
+              {/* ACCIONES */}
               <TableCell className="text-right">
                 <TurnoActionDropdown
                   turno={turno}

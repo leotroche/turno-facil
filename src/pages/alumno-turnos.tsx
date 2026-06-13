@@ -23,22 +23,21 @@ export function AlumnoTurnos() {
   return (
     <section className="flex flex-col gap-10">
       <header className="bg-card flex w-full items-center justify-between rounded-2xl border px-8 py-6 shadow-sm">
-        <div className="flex flex-col gap-3">
+        {/* INFO */}
+        <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Badge>Alumno</Badge>
-
-            {user?.legajo && <Badge variant="secondary">{user.legajo}</Badge>}
+            {user?.legajo && <Badge variant="secondary">Legajo {user.legajo}</Badge>}
           </div>
 
           <h2 className="text-2xl font-semibold">{user?.nombre}</h2>
+
+          <p className="text-muted-foreground text-sm">Turnos disponibles</p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => window.location.reload()}>
-            Refrescar
-          </Button>
-
-          <Button variant="destructive" onClick={logout}>
+        {/* ACTIONS */}
+        <div className="flex items-center gap-3">
+          <Button variant="outline" onClick={logout}>
             Cerrar sesión
           </Button>
         </div>

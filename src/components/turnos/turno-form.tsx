@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { addDays, format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 
-import { useAuth } from '@/context/auth'
 import { turnoFormSchema, type TurnoFormValues } from '@/schemas/turno-form-schema'
 
 import { Button } from '../ui/button'
@@ -16,10 +15,6 @@ type TurnoFormProps = {
 }
 
 export function TurnoForm({ initialValues, onSubmit }: TurnoFormProps) {
-  const { user } = useAuth()
-
-  console.log('AUTH:', user)
-
   const now = new Date()
 
   const form = useForm<TurnoFormValues>({
@@ -33,7 +28,6 @@ export function TurnoForm({ initialValues, onSubmit }: TurnoFormProps) {
       hora_inicio: '08:00',
       hora_fin: '10:00',
 
-      docente_id: '',
       ubicacion: 'Universidad Nacional de Quilmes - Aula 213',
       cupo_maximo: 25,
 
