@@ -3,12 +3,12 @@ import userEvent from '@testing-library/user-event'
 import { expect, test, vi } from 'vitest'
 
 import { TurnosTable } from '@/components/turnos/turnos-table'
-import type { TurnoConCantidadReservas } from '@/types/types'
+import type { Turno } from '@/types/types'
 
 import { mockTurno } from './mocks'
 
 // Creamos un segundo turno para probar que renderiza múltiples filas y estados
-const mockTurnos: TurnoConCantidadReservas[] = [
+const mockTurnos: Turno[] = [
   mockTurno,
   {
     ...mockTurno,
