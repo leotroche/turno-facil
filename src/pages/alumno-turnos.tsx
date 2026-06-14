@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { EmptyState } from '@/components/empty-state'
 import { FiltroFecha } from '@/components/filtros/fecha'
 import { FiltroMateria } from '@/components/filtros/materia'
+import { FiltroProfesor } from '@/components/filtros/profesor'
 import { LoadingState } from '@/components/loading-state'
 import { TurnosGrid } from '@/components/turnos/turnos-grid'
 import { Badge } from '@/components/ui/badge'
@@ -19,6 +20,7 @@ export function AlumnoTurnos() {
   // FILTROS
   const [materia, setMateria] = useState('')
   const [fecha, setFecha] = useState<Date | undefined>(undefined)
+  const [profesor, setProfesor] = useState('')
 
   const turnosFiltrados = turnos.filter((t) => {
     const coincideMateria =
@@ -26,7 +28,10 @@ export function AlumnoTurnos() {
 
     const coincideFecha = !fecha || t.fecha.slice(0, 10) === format(fecha, 'yyyy-MM-dd')
 
-    return coincideMateria && coincideFecha
+    const coincideProfesor =
+      !profesor || normalizar(t.docente?.nombre ?? '').includes(normalizar(profesor))
+
+    return coincideMateria && coincideFecha && coincideProfesor
   })
 
   let content
@@ -64,16 +69,14 @@ export function AlumnoTurnos() {
       </header>
 
       {/* FILTROS */}
-      <div className="flex flex-col gap-3">
-        <div>
-          <h3 className="font-medium">Filtrar turnos</h3>
-          <p className="text-muted-foreground text-sm">Filtrá los turnos por materia o fecha.</p>
-        </div>
-
+      <div className="bg-card space-y-4 rounded-xl border p-4">
+        <p className="text-muted-foreground text-xs">Materia · Fecha · Profesor</p>
         <div className="flex flex-wrap gap-4">
           <FiltroMateria value={materia} onValueChange={setMateria} />
 
           <FiltroFecha value={fecha} onChange={setFecha} />
+
+          <FiltroProfesor value={profesor} onChange={setProfesor} />
         </div>
       </div>
       <div className="w-full">{content}</div>
