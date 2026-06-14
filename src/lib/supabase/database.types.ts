@@ -8,29 +8,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      perfiles: {
+        Row: {
+          creado_en: string
+          id: string
+          legajo: string | null
+          nombre: string | null
+          rol: string
+        }
+        Insert: {
+          creado_en?: string
+          id: string
+          legajo?: string | null
+          nombre?: string | null
+          rol?: string
+        }
+        Update: {
+          creado_en?: string
+          id?: string
+          legajo?: string | null
+          nombre?: string | null
+          rol?: string
+        }
+        Relationships: []
+      }
       reservas: {
         Row: {
-          alumno: string
+          alumno_id: string
           id: string
-          legajo: string
           reservado_en: string
           turno_id: string
         }
         Insert: {
-          alumno: string
+          alumno_id: string
           id?: string
-          legajo: string
           reservado_en?: string
           turno_id: string
         }
         Update: {
-          alumno?: string
+          alumno_id?: string
           id?: string
-          legajo?: string
           reservado_en?: string
           turno_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: 'reservas_alumno_id_fkey'
+            columns: ['alumno_id']
+            isOneToOne: false
+            referencedRelation: 'perfiles'
+            referencedColumns: ['id']
+          },
           {
             foreignKeyName: 'reservas_turno_id_fkey'
             columns: ['turno_id']
@@ -45,7 +73,7 @@ export type Database = {
           creado_en: string
           cupo_maximo: number
           descripcion: string | null
-          docente: string
+          docente_id: string
           estado: string
           fecha: string
           hora_fin: string
@@ -59,7 +87,7 @@ export type Database = {
           creado_en?: string
           cupo_maximo: number
           descripcion?: string | null
-          docente: string
+          docente_id: string
           estado?: string
           fecha: string
           hora_fin: string
@@ -73,7 +101,7 @@ export type Database = {
           creado_en?: string
           cupo_maximo?: number
           descripcion?: string | null
-          docente?: string
+          docente_id?: string
           estado?: string
           fecha?: string
           hora_fin?: string
@@ -83,7 +111,15 @@ export type Database = {
           tipo?: string
           ubicacion?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'turnos_docente_id_fkey'
+            columns: ['docente_id']
+            isOneToOne: false
+            referencedRelation: 'perfiles'
+            referencedColumns: ['id']
+          },
+        ]
       }
     }
     Views: {

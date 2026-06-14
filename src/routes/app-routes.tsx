@@ -1,10 +1,14 @@
-import { Route, Routes } from 'react-router'
+// oxlint-disable jsx-a11y/aria-role
+
+import { Navigate, Route, Routes } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 
-import { AdminTurnos } from '@/pages/admin-turnos'
-import { HomePage } from '@/pages/Home'
-import { SignupPage } from '@/pages/signup'
-import { Turnos } from '@/pages/turnos'
+import { ProtectedLayout } from '@/layouts/protected-layout'
+import { PublicLayout } from '@/layouts/public-layout'
+import { AlumnoTurnos } from '@/pages/alumno-turnos'
+import { DocenteTurnos } from '@/pages/docente-turnos'
+import { LoginPage } from '@/pages/login'
+import { RegisterPage } from '@/pages/register'
 
 export function AppRoutes() {
   return (
@@ -12,10 +16,27 @@ export function AppRoutes() {
       <ToastContainer theme="dark" position="bottom-right" />
 
       <Routes>
-        <Route index Component={HomePage} />
-        <Route path="/signup" Component={SignupPage} />
-        <Route path="/turnos" Component={Turnos} />
-        <Route path="/admin/turnos" Component={AdminTurnos} />
+        {/* root redirect */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* Públicas */}
+        <Route element={<PublicLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
+
+        {/* Alumno */}
+        <Route element={<ProtectedLayout role="alumno" />}>
+          <Route path="/alumno" element={<AlumnoTurnos />} />
+        </Route>
+
+        {/* Docente */}
+        <Route element={<ProtectedLayout role="docente" />}>
+          <Route path="/docente" element={<DocenteTurnos />} />
+        </Route>
+
+        {/* fallback */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </div>
   )

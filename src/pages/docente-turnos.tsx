@@ -6,25 +6,27 @@ import { EmptyState } from '@/components/empty-state'
 import { LoadingState } from '@/components/loading-state'
 import { TurnoDialog } from '@/components/turnos/turno-dialog'
 import { TurnosTable } from '@/components/turnos/turnos-table'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/context/auth'
 import { useTurnos } from '@/hooks/useTurnos'
 import { useTurnosMutations } from '@/hooks/useTurnosMutations'
-import type { TurnoConCantidadReservas } from '@/types/types'
+import type { Turno } from '@/types/types'
 
-export function AdminTurnos() {
+export function DocenteTurnos() {
+  const { user, logout } = useAuth()
   const { turnos, isPending } = useTurnos()
   const { eliminar, actualizar } = useTurnosMutations()
 
   const [open, setOpen] = useState(false)
-
-  const [selectedTurno, setSelectedTurno] = useState<TurnoConCantidadReservas>()
+  const [selectedTurno, setSelectedTurno] = useState<Turno>()
 
   const handleCreate = () => {
     setSelectedTurno(undefined)
     setOpen(true)
   }
 
-  const handleUpdate = (turno: TurnoConCantidadReservas) => {
+  const handleUpdate = (turno: Turno) => {
     setSelectedTurno(turno)
     setOpen(true)
   }
@@ -75,13 +77,31 @@ export function AdminTurnos() {
   }
 
   return (
-    <section className="space-y-8">
-      <header className="flex items-center justify-between">
-        <h2 className="text-2xl font-medium">Gestión de turnos</h2>
+    <section className="flex flex-col gap-10">
+      <header className="bg-card flex w-full items-center justify-between rounded-2xl border px-8 py-6 shadow-sm">
+        {/* INFO */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <Badge>Docente</Badge>
+            {user?.legajo && <Badge variant="secondary">Legajo {user.legajo}</Badge>}
+          </div>
 
-        <Button onClick={handleCreate} size="lg">
-          <CalendarPlus /> Crear turno
-        </Button>
+          <h2 className="text-2xl font-semibold">{user?.nombre}</h2>
+
+          <p className="text-muted-foreground text-sm">Gestión de turnos académicos</p>
+        </div>
+
+        {/* ACTIONS */}
+        <div className="flex items-center gap-3">
+          <Button onClick={handleCreate}>
+            <CalendarPlus />
+            Nuevo turno
+          </Button>
+
+          <Button variant="outline" onClick={logout}>
+            Cerrar sesión
+          </Button>
+        </div>
       </header>
 
       {content}
