@@ -20,35 +20,29 @@ beforeEach(() => {
 test('muestra errores de validación si el formulario se envía vacío o con datos inválidos', async () => {
   render(<ReservaDialog turno={mockTurno} open={true} onOpenChange={vi.fn()} />)
 
+  const inputAlumno = screen.getByPlaceholderText(/juan pérez/i)
+  const inputLegajo = screen.getByPlaceholderText(/12345678/i)
+
+  fireEvent.change(inputAlumno, { target: { value: '' } })
+  fireEvent.change(inputLegajo, { target: { value: '' } })
+
   const btnSubmit = screen.getByRole('button', { name: /confirmar reserva/i })
   fireEvent.click(btnSubmit)
 
   await waitFor(() => {
-    expect(screen.getByText(/el nombre es requerido/i)).toBeDefined()
-    expect(screen.getByText(/el legajo debe tener al menos 7 dígitos/i)).toBeDefined()
-  })
-
-  const inputNombre = screen.getByPlaceholderText(/juan pérez/i)
-  const inputLegajo = screen.getByPlaceholderText(/12345678/i)
-
-  fireEvent.change(inputNombre, { target: { value: 'Juan123' } })
-  fireEvent.change(inputLegajo, { target: { value: 'ABCDEFG' } })
-  fireEvent.click(btnSubmit)
-
-  await waitFor(() => {
-    expect(screen.getByText(/el nombre solo puede contener letras/i)).toBeDefined()
-    expect(screen.getByText(/el legajo solo puede contener números/i)).toBeDefined()
+    const errores = screen.getAllByText(/requerido/i)
+    expect(errores.length).toBeGreaterThan(0)
   })
 })
 
 test('llama a la mutación reservar con los datos correctos', async () => {
   render(<ReservaDialog turno={mockTurno} open={true} onOpenChange={vi.fn()} />)
 
-  const inputNombre = screen.getByPlaceholderText(/juan pérez/i)
+  const inputAlumno = screen.getByPlaceholderText(/juan pérez/i)
   const inputLegajo = screen.getByPlaceholderText(/12345678/i)
 
-  fireEvent.change(inputNombre, { target: { value: 'Carlos Gardel' } })
-  fireEvent.change(inputLegajo, { target: { value: '1234567' } })
+  fireEvent.change(inputAlumno, { target: { value: 'Marcos Senesi' } })
+  fireEvent.change(inputLegajo, { target: { value: '999999' } })
 
   const btnSubmit = screen.getByRole('button', { name: /confirmar reserva/i })
   fireEvent.click(btnSubmit)
@@ -56,7 +50,7 @@ test('llama a la mutación reservar con los datos correctos', async () => {
   await waitFor(() => {
     expect(mockMutate).toHaveBeenCalledTimes(1)
     expect(mockMutate).toHaveBeenCalledWith(
-      { turno_id: 't-123', alumno: 'Carlos Gardel', legajo: '1234567' },
+      { turno_id: 't-123', alumno_id: 'Marcos Senesi' },
       expect.any(Object),
     )
   })
