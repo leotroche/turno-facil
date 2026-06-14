@@ -20,3 +20,12 @@ export function formatFecha(fecha: string) {
 export function formatHora(hora: string) {
   return hora.slice(0, 5)
 }
+
+// ------------------------------------------------------------
+
+export function normalizar(texto: string) {
+  return texto
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
