@@ -1,16 +1,12 @@
 import { toast } from 'react-toastify'
 
-import { useTurnosMutations } from '@/hooks/useTurnosMutations'
 import { useAuth } from '@/context/auth'
+import { useTurnosMutations } from '@/hooks/useTurnosMutations'
+import { formatFecha, formatHora } from '@/lib/utils'
 import type { Turno } from '@/types/types'
 
 import { Button } from '../ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
 
 type Props = {
   turno: Turno
@@ -18,11 +14,7 @@ type Props = {
   onOpenChange: (open: boolean) => void
 }
 
-export function ReservaDialog({
-  turno,
-  open,
-  onOpenChange,
-}: Props) {
+export function ReservaDialog({ turno, open, onOpenChange }: Props) {
   const { reservar } = useTurnosMutations()
   const { user } = useAuth()
 
@@ -33,90 +25,61 @@ export function ReservaDialog({
     }
 
     reservar.mutate(
-      {
-        turno_id: turno.id,
-        alumno_id: user.id,
-      },
+      { turno_id: turno.id, alumno_id: user.id },
       {
         onSuccess: () => {
-          toast.success(
-            'Reserva realizada correctamente',
-          )
-
+          toast.success('Reserva realizada correctamente')
           onOpenChange(false)
         },
-
-        onError: () => {
-          toast.error(
-            'Ya reservaste este turno o ocurrió un error',
-          )
-        },
+        onError: () => toast.error('Ya reservaste este turno o ocurrió un error'),
       },
     )
   }
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onOpenChange}
-    >
-      <DialogContent
-        className="sm:max-w-md"
-        aria-describedby={undefined}
-      >
-        <DialogHeader className="border-b pb-4">
-          <DialogTitle>
-            Confirmar reserva
-          </DialogTitle>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md" aria-describedby={undefined}>
+        <DialogHeader>
+          <DialogTitle>Confirmar reserva</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 pt-2">
-          <div>
-            <p className="font-medium">
-              {turno.materia}
-            </p>
+        <div className="space-y-6">
+          <div className="space-y-1">
+            <h3 className="text-lg font-semibold">{turno.materia}</h3>
 
-            <p className="text-muted-foreground text-sm">
-              {turno.docente.nombre}
-            </p>
+            <p className="text-muted-foreground text-sm">{turno.docente.nombre}</p>
           </div>
 
-          <div className="rounded-lg border p-4 text-sm">
-            <p>
-              <strong>Fecha:</strong>{' '}
-              {turno.fecha}
-            </p>
+          <div className="bg-muted/40 space-y-3 rounded-xl border p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm">Fecha</span>
+              <span className="font-medium">{formatFecha(turno.fecha)}</span>
+            </div>
 
-            <p>
-              <strong>Horario:</strong>{' '}
-              {turno.hora_inicio} -{' '}
-              {turno.hora_fin}
-            </p>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm">Horario</span>
+              <span className="font-medium">
+                {formatHora(turno.hora_inicio)} - {formatHora(turno.hora_fin)}
+              </span>
+            </div>
 
-            <p>
-              <strong>Ubicación:</strong>{' '}
-              {turno.ubicacion}
-            </p>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm">Ubicación</span>
+              <span className="font-medium">{turno.ubicacion}</span>
+            </div>
           </div>
 
-          <div className="flex justify-end gap-2 border-t pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() =>
-                onOpenChange(false)
-              }
-            >
+          <p className="text-muted-foreground text-sm">
+            Verificá los datos antes de confirmar la reserva.
+          </p>
+
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancelar
             </Button>
 
-            <Button
-              onClick={handleReservar}
-              disabled={reservar.isPending}
-            >
-              {reservar.isPending
-                ? 'Reservando...'
-                : 'Confirmar reserva'}
+            <Button onClick={handleReservar} disabled={reservar.isPending}>
+              {reservar.isPending ? 'Reservando...' : 'Confirmar reserva'}
             </Button>
           </div>
         </div>

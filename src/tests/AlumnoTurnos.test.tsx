@@ -1,4 +1,6 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import { expect, test, vi } from 'vitest'
 
 import { AlumnoTurnos } from '@/pages/alumno-turnos'
@@ -13,6 +15,7 @@ vi.mock('@/context/auth', () => ({
 }))
 
 const mockUseTurnos = vi.fn()
+
 vi.mock('@/hooks/useTurnos', () => ({
   useTurnos: () => mockUseTurnos(),
 }))
@@ -24,13 +27,29 @@ vi.mock('@/hooks/useTurnosMutations', () => ({
 }))
 
 test('renderiza la vista del alumno con los turnos en formato grilla', () => {
-  mockUseTurnos.mockReturnValue({ turnos: [mockTurno], isPending: false })
+  mockUseTurnos.mockReturnValue({
+    turnos: [mockTurno],
+    isPending: false,
+  })
 
-  render(<AlumnoTurnos />)
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+
+  render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <AlumnoTurnos />
+      </MemoryRouter>
+    </QueryClientProvider>,
+  )
 
   expect(screen.getByText('Juan Alumno')).toBeDefined()
   expect(screen.getByText(/Legajo 99999/i)).toBeDefined()
-
   expect(screen.getByText('Programación Orientada a Objetos')).toBeDefined()
   expect(screen.getByText('Prof. Rodríguez')).toBeDefined()
 })

@@ -8,8 +8,8 @@ import { PublicLayout } from '@/layouts/public-layout'
 import { AlumnoTurnos } from '@/pages/alumno-turnos'
 import { DocenteTurnos } from '@/pages/docente-turnos'
 import { LoginPage } from '@/pages/login'
-import { RegisterPage } from '@/pages/register'
 import { MisTurnosPage } from '@/pages/mis-turnos'
+import { RegisterPage } from '@/pages/register'
 
 export function AppRoutes() {
   return (
@@ -29,8 +29,7 @@ export function AppRoutes() {
         {/* Alumno */}
         <Route element={<ProtectedLayout role="alumno" />}>
           <Route path="/alumno" element={<AlumnoTurnos />} />
-
-        <Route path="/mis-turnos" element={<MisTurnosPage />}/>
+          <Route path="/alumno/mis-turnos" element={<MisTurnosPage />} />
         </Route>
 
         {/* Docente */}

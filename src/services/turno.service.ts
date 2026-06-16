@@ -104,16 +104,23 @@ export async function eliminarTurno(id: string): Promise<void> {
 // ------------------------------------------------------------
 
 export async function crearReserva(reserva: ReservaFormValues): Promise<void> {
-  const { error } = await supabase.from('reservas').insert(reserva)
+  const { data: authData, error: authError } = await supabase.auth.getUser()
+
+  if (authError || !authData.user) {
+    throw new Error('No autenticado')
+  }
+
+  const { error } = await supabase.from('reservas').insert({
+    turno_id: reserva.turno_id,
+    alumno_id: authData.user.id,
+  })
 
   if (error) throw error
 }
-
 // ------------------------------------------------------------
 
 export async function obtenerMisTurnos(): Promise<Turno[]> {
-  const { data: authData, error: authError } =
-    await supabase.auth.getUser()
+  const { data: authData, error: authError } = await supabase.auth.getUser()
 
   if (authError || !authData.user) {
     throw new Error('No autenticado')
@@ -142,47 +149,26 @@ export async function obtenerMisTurnos(): Promise<Turno[]> {
   return data.map(({ turno }: any) => ({
     ...turno,
     docente: turno.docente,
-    cantidad_reservas:
-      turno.reservas.length,
+    cantidad_reservas: turno.reservas.length,
   }))
 }
 
 // ------------------------------------------------------------
 
-export async function cancelarReserva(
-  turnoId: string,
-): Promise<void> {
-  const {
-    data: authData,
-    error: authError,
-  } = await supabase.auth.getUser()
+export async function cancelarReserva(turnoId: string): Promise<void> {
+  const { data: authData, error: authError } = await supabase.auth.getUser()
 
-  if (
-    authError ||
-    !authData.user
-  ) {
-    throw new Error(
-      'No autenticado',
-    )
+  if (authError || !authData.user) {
+    throw new Error('No autenticado')
   }
 
-  const userId =
-    authData.user.id
+  const userId = authData.user.id
 
-  const { error } =
-    await supabase
-      .from('reservas')
-      .delete()
-      .eq(
-        'turno_id',
-        turnoId,
-      )
-      .eq(
-        'alumno_id',
-        userId,
-      )
+  const { error } = await supabase
+    .from('reservas')
+    .delete()
+    .eq('turno_id', turnoId)
+    .eq('alumno_id', userId)
 
   if (error) throw error
 }
-
-

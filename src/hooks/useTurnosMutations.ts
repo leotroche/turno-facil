@@ -2,13 +2,17 @@ import { useQueryClient, useMutation } from '@tanstack/react-query'
 
 import type { ReservaFormValues } from '@/schemas/reserva-form-schema'
 import type { TurnoFormValues } from '@/schemas/turno-form-schema'
-import { eliminarTurno, actualizarTurno, crearTurno, crearReserva, cancelarReserva } from '@/services/turno.service'
+import {
+  eliminarTurno,
+  actualizarTurno,
+  crearTurno,
+  crearReserva,
+  cancelarReserva,
+} from '@/services/turno.service'
 import type { TurnoRowUpdate } from '@/types/types'
 
 export function useTurnosMutations() {
   const queryClient = useQueryClient()
-
-  const invalidarTurnos = () => queryClient.invalidateQueries({ queryKey: ['turnos'] })
 
   // ------------------------------------------------------------
 
@@ -16,6 +20,7 @@ export function useTurnosMutations() {
     mutationFn: (nuevoTurno: TurnoFormValues) => crearTurno(nuevoTurno),
 
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['mis-turnos'] })
       queryClient.invalidateQueries({ queryKey: ['turnos'] })
     },
   })
@@ -27,6 +32,7 @@ export function useTurnosMutations() {
       actualizarTurno(id, updates),
 
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['mis-turnos'] })
       queryClient.invalidateQueries({ queryKey: ['turnos'] })
     },
   })
@@ -37,6 +43,7 @@ export function useTurnosMutations() {
     mutationFn: (id: string) => eliminarTurno(id),
 
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['mis-turnos'] })
       queryClient.invalidateQueries({ queryKey: ['turnos'] })
     },
   })
@@ -45,26 +52,19 @@ export function useTurnosMutations() {
 
   const reservar = useMutation({
     mutationFn: (reserva: ReservaFormValues) => crearReserva(reserva),
-    onSuccess: invalidarTurnos,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['mis-turnos'] })
+      queryClient.invalidateQueries({ queryKey: ['turnos'] })
+    },
   })
 
   // ------------------------------------------------------------
 
-  const cancelar = useMutation({ mutationFn: ( turnoId: string,) => cancelarReserva(turnoId,),
-    onSuccess: () => { queryClient.invalidateQueries({
-          queryKey: [
-            'mis-turnos',
-          ],
-        },
-      )
-
-      queryClient.invalidateQueries(
-        {
-          queryKey: [
-            'turnos',
-          ],
-        },
-      )
+  const cancelar = useMutation({
+    mutationFn: (turnoId: string) => cancelarReserva(turnoId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['mis-turnos'] })
+      queryClient.invalidateQueries({ queryKey: ['turnos'] })
     },
   })
 

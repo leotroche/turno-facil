@@ -11,35 +11,24 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '../ui/separator'
 import { ReservaDialog } from './reserva-dialog'
 
-
 type Props = {
   turno: Turno
-  mode?: 'default' | 'mis-turnos'
+  reservado: boolean
 }
 
-export function TurnoCard({ turno, mode = 'default' }: Props) {
+export function TurnoCard({ turno, reservado }: Props) {
   const [openReserva, setOpenReserva] = useState(false)
   const { cancelar } = useTurnosMutations()
 
   const isFull = turno.estado === 'lleno'
   const isClosed = turno.estado === 'cerrado'
-  const isMisTurnos = mode === 'mis-turnos'
-
   const isDisabled = isFull || isClosed
-  const handleCancelar =() => {cancelar.mutate(turno.id,{
-        onSuccess: () => {
-          toast.success(
-            'Reserva cancelada',
-          )
-        },
 
-        onError: () => {
-          toast.error(
-            'Error al cancelar reserva',
-          )
-        },
-      },
-    )
+  const handleCancelar = () => {
+    cancelar.mutate(turno.id, {
+      onSuccess: () => toast.success('Reserva cancelada'),
+      onError: () => toast.error('Error al cancelar reserva'),
+    })
   }
 
   return (
@@ -96,41 +85,17 @@ export function TurnoCard({ turno, mode = 'default' }: Props) {
             </p>
           </div>
 
-          {isMisTurnos ? (
-            <Button
-              variant="destructive"
-              onClick={
-                handleCancelar
-              }
-              disabled={
-                cancelar.isPending
-              }
-            >
-              {cancelar.isPending
-                ? 'Cancelando...'
-                : 'Cancelar reserva'}
+          {reservado ? (
+            <Button variant="destructive" onClick={handleCancelar} disabled={cancelar.isPending}>
+              {cancelar.isPending ? 'Cancelando...' : 'Cancelar reserva'}
             </Button>
           ) : (
             <Button
-              disabled={
-                isDisabled
-              }
-              variant={
-                isDisabled
-                  ? 'secondary'
-                  : 'default'
-              }
-              onClick={() =>
-                setOpenReserva(
-                  true,
-                )
-              }
+              disabled={isDisabled}
+              variant={isDisabled ? 'secondary' : 'default'}
+              onClick={() => setOpenReserva(true)}
             >
-              {isFull
-                ? 'Sin cupos'
-                : isClosed
-                  ? 'Cerrado'
-                  : 'Reservar'}
+              {isFull ? 'Sin cupos' : isClosed ? 'Cerrado' : 'Reservar'}
             </Button>
           )}
         </CardFooter>

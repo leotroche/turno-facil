@@ -1,5 +1,6 @@
 import { format } from 'date-fns'
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { EmptyState } from '@/components/empty-state'
 import { FiltroFecha } from '@/components/filtros/fecha'
@@ -12,7 +13,6 @@ import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/auth'
 import { useTurnos } from '@/hooks/useTurnos'
 import { normalizar } from '@/lib/utils'
-import { useNavigate } from 'react-router'
 
 export function AlumnoTurnos() {
   const { turnos, isPending } = useTurnos()
@@ -64,14 +64,12 @@ export function AlumnoTurnos() {
 
         {/* ACTIONS */}
         <div className="flex items-center gap-3">
-          <Button variant="secondary" onClick={() =>
-            navigate('/mis-turnos')}> Mis Turnos
-          </Button>
+          <Button onClick={() => navigate('/alumno/mis-turnos')}>Mis Turnos</Button>
 
           <Button variant="outline" onClick={logout}>
             Cerrar sesión
           </Button>
-        </div> 
+        </div>
       </header>
 
       {/* FILTROS */}
