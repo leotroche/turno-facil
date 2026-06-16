@@ -48,41 +48,44 @@ export function AlumnoTurnos() {
 
   return (
     <section className="flex flex-col gap-10">
-      <header className="bg-card flex w-full items-center justify-between rounded-2xl border px-8 py-6 shadow-sm">
-        {/* INFO */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <Badge>Alumno</Badge>
+      <div className="flex flex-col gap-2">
+        <header className="bg-card flex w-full items-center justify-between rounded-2xl border px-8 py-6 shadow-sm">
+          {/* INFO */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <Badge>Alumno</Badge>
 
-            {user?.legajo && <Badge variant="secondary">Legajo {user.legajo}</Badge>}
+              {user?.legajo && <Badge variant="secondary">Legajo {user.legajo}</Badge>}
+            </div>
+
+            <h2 className="text-2xl font-semibold">{user?.nombre}</h2>
+
+            <p className="text-muted-foreground text-sm">Turnos disponibles</p>
           </div>
 
-          <h2 className="text-2xl font-semibold">{user?.nombre}</h2>
+          {/* ACTIONS */}
+          <div className="flex items-center gap-3">
+            <Button onClick={() => navigate('/alumno/mis-turnos')}>Mis Turnos</Button>
 
-          <p className="text-muted-foreground text-sm">Turnos disponibles</p>
-        </div>
+            <Button variant="outline" onClick={logout}>
+              Cerrar sesión
+            </Button>
+          </div>
+        </header>
 
-        {/* ACTIONS */}
-        <div className="flex items-center gap-3">
-          <Button onClick={() => navigate('/alumno/mis-turnos')}>Mis Turnos</Button>
+        {/* FILTROS */}
+        <div className="bg-card space-y-4 rounded-xl border p-4">
+          <p className="text-muted-foreground text-xs">Materia · Fecha · Profesor</p>
+          <div className="flex flex-wrap gap-4">
+            <FiltroMateria value={materia} onValueChange={setMateria} />
 
-          <Button variant="outline" onClick={logout}>
-            Cerrar sesión
-          </Button>
-        </div>
-      </header>
+            <FiltroFecha value={fecha} onChange={setFecha} />
 
-      {/* FILTROS */}
-      <div className="bg-card space-y-4 rounded-xl border p-4">
-        <p className="text-muted-foreground text-xs">Materia · Fecha · Profesor</p>
-        <div className="flex flex-wrap gap-4">
-          <FiltroMateria value={materia} onValueChange={setMateria} />
-
-          <FiltroFecha value={fecha} onChange={setFecha} />
-
-          <FiltroProfesor value={profesor} onChange={setProfesor} />
+            <FiltroProfesor value={profesor} onChange={setProfesor} />
+          </div>
         </div>
       </div>
+
       <div className="w-full">{content}</div>
     </section>
   )
