@@ -1,5 +1,6 @@
 import { format } from 'date-fns'
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { EmptyState } from '@/components/empty-state'
 import { FiltroFecha } from '@/components/filtros/fecha'
@@ -16,6 +17,7 @@ import { normalizar } from '@/lib/utils'
 export function AlumnoTurnos() {
   const { turnos, isPending } = useTurnos()
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
 
   // FILTROS
   const [materia, setMateria] = useState('')
@@ -24,7 +26,7 @@ export function AlumnoTurnos() {
 
   const turnosFiltrados = turnos.filter((t) => {
     const coincideMateria =
-      !materia || materia === '__all__' || normalizar(t.materia) === normalizar(materia)
+      !materia || materia === '__all__' || normalizar(t.materia ?? '').includes(normalizar(materia))
 
     const coincideFecha = !fecha || t.fecha.slice(0, 10) === format(fecha, 'yyyy-MM-dd')
 
@@ -62,6 +64,8 @@ export function AlumnoTurnos() {
 
         {/* ACTIONS */}
         <div className="flex items-center gap-3">
+          <Button onClick={() => navigate('/alumno/mis-turnos')}>Mis Turnos</Button>
+
           <Button variant="outline" onClick={logout}>
             Cerrar sesión
           </Button>
