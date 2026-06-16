@@ -26,7 +26,7 @@ export function AlumnoTurnos() {
 
   const turnosFiltrados = turnos.filter((t) => {
     const coincideMateria =
-      !materia || materia === '__all__' || normalizar(t.materia) === normalizar(materia)
+      !materia || materia === '__all__' || normalizar(t.materia ?? '').includes(normalizar(materia))
 
     const coincideFecha = !fecha || t.fecha.slice(0, 10) === format(fecha, 'yyyy-MM-dd')
 
