@@ -108,3 +108,81 @@ export async function crearReserva(reserva: ReservaFormValues): Promise<void> {
 
   if (error) throw error
 }
+
+// ------------------------------------------------------------
+
+export async function obtenerMisTurnos(): Promise<Turno[]> {
+  const { data: authData, error: authError } =
+    await supabase.auth.getUser()
+
+  if (authError || !authData.user) {
+    throw new Error('No autenticado')
+  }
+
+  const userId = authData.user.id
+
+  const { data, error } = await supabase
+    .from('reservas')
+    .select(`
+      turno:turnos (
+        *,
+        docente:perfiles!turnos_docente_id_fkey (
+          id,
+          nombre,
+          legajo,
+          rol
+        ),
+        reservas(id)
+      )
+    `)
+    .eq('alumno_id', userId)
+
+  if (error) throw error
+
+  return data.map(({ turno }: any) => ({
+    ...turno,
+    docente: turno.docente,
+    cantidad_reservas:
+      turno.reservas.length,
+  }))
+}
+
+// ------------------------------------------------------------
+
+export async function cancelarReserva(
+  turnoId: string,
+): Promise<void> {
+  const {
+    data: authData,
+    error: authError,
+  } = await supabase.auth.getUser()
+
+  if (
+    authError ||
+    !authData.user
+  ) {
+    throw new Error(
+      'No autenticado',
+    )
+  }
+
+  const userId =
+    authData.user.id
+
+  const { error } =
+    await supabase
+      .from('reservas')
+      .delete()
+      .eq(
+        'turno_id',
+        turnoId,
+      )
+      .eq(
+        'alumno_id',
+        userId,
+      )
+
+  if (error) throw error
+}
+
+
