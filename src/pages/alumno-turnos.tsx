@@ -12,10 +12,12 @@ import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/auth'
 import { useTurnos } from '@/hooks/useTurnos'
 import { normalizar } from '@/lib/utils'
+import { useNavigate } from 'react-router'
 
 export function AlumnoTurnos() {
   const { turnos, isPending } = useTurnos()
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
 
   // FILTROS
   const [materia, setMateria] = useState('')
@@ -62,10 +64,14 @@ export function AlumnoTurnos() {
 
         {/* ACTIONS */}
         <div className="flex items-center gap-3">
+          <Button variant="secondary" onClick={() =>
+            navigate('/mis-turnos')}> Mis Turnos
+          </Button>
+
           <Button variant="outline" onClick={logout}>
             Cerrar sesión
           </Button>
-        </div>
+        </div> 
       </header>
 
       {/* FILTROS */}
