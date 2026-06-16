@@ -62,7 +62,7 @@ test('llama a la función login y muestra un toast de éxito si los datos son co
   await waitFor(() => {
     expect(mockLogin).toHaveBeenCalledTimes(1)
     expect(mockLogin).toHaveBeenCalledWith({ email: 'alumno@unq.edu.ar', password: 'password123' })
-    expect(toast.success).toHaveBeenCalledWith('Usuario iniciado sesión exitosamente')
+    expect(toast.success).toHaveBeenCalledWith('Inicio de sesión exitoso')
   })
 })
 
